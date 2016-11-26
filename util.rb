@@ -25,7 +25,7 @@ WHITE = {
 }
 RED = {
   cterm: "1",
-  gui: "#800000"
+  gui: "#c00000"
 }
 GREEN = {
   cterm: "2",
@@ -33,19 +33,15 @@ GREEN = {
 }
 YELLOW = {
   cterm: "3",
-  gui: "#806000"
+  gui: "#c06000"
 }
 BLUE = {
   cterm: "4",
-  gui: "#004080"
-}
-LIGHT_BLUE = {
-  cterm: "12",
-  gui: "#005FBF"
+  gui: "#0060c0"
 }
 PURPLE = {
   cterm: "5",
-  gui: "#800080"
+  gui: "#a000a0"
 }
 CYAN = {
   cterm: "6",
