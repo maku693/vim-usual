@@ -1,48 +1,261 @@
 set background=light
 hi clear
 
-if exists("syntax_on")
+if exists('syntax_on')
   syntax reset
 endif
 
-let colors_name="usual"
+let g:colors_name='usual'
+
+let s:colors = {
+      \   'DARK_GRAY': {
+      \     'cterm': '8',
+      \     'gui': '#606060'
+      \   },
+      \   'LIGHT_GRAY': {
+      \     'cterm': '7',
+      \     'gui': '#c0c0c0'
+      \   },
+      \   'WHITE': {
+      \     'cterm': '15',
+      \     'gui': '#ffffff'
+      \   },
+      \   'RED': {
+      \     'cterm': '1',
+      \     'gui': '#c00000'
+      \   },
+      \   'GREEN': {
+      \     'cterm': '2',
+      \     'gui': '#008000'
+      \   },
+      \   'YELLOW': {
+      \     'cterm': '3',
+      \     'gui': '#c06000'
+      \   },
+      \   'BLUE': {
+      \     'cterm': '4',
+      \     'gui': '#0060c0'
+      \   },
+      \   'PURPLE': {
+      \     'cterm': '5',
+      \     'gui': '#a000a0'
+      \   },
+      \   'CYAN': {
+      \     'cterm': '6',
+      \     'gui': '#008080'
+      \   },
+      \   'NONE': {
+      \     'cterm': 'NONE',
+      \     'gui': 'NONE'
+      \   }
+      \ }
+
+let s:decorations = {
+      \   'BOLD': {
+      \     'cterm': 'bold',
+      \     'gui': 'bold'
+      \   },
+      \   'UNDERLINE': {
+      \     'cterm': 'underline',
+      \     'gui': 'underline'
+      \   },
+      \   'NONE': {
+      \     'cterm': 'NONE',
+      \     'gui': 'NONE'
+      \   }
+      \ }
+
+function! s:define_accessor(dict, type) abort
+  execute
+        \ 'function! '.a:dict.'.'.a:type.'(name) abort'."\n".
+        \ '  return self[a:name]["'.a:type.'"]'."\n".
+        \ 'endfunction'."\n"
+endfunction
+
+function! s:define_accessors(dict) abort
+  for l:type in ['cterm', 'gui']
+    call s:define_accessor(a:dict, l:type)
+  endfor
+endfunction
+
+call s:define_accessors('s:colors')
+call s:define_accessors('s:decorations')
+
+function! s:highlight(group, options) abort
+  let l:fg = get(a:options, 'fg', '')
+  let l:bg = get(a:options, 'bg', '')
+  let l:decoration = get(a:options, 'decoration', '')
+
+  let l:command = ['highlight '.a:group]
+  if strlen(l:fg)
+    let l:gui = s:colors.gui(l:fg)
+    let l:cterm = s:colors.cterm(l:fg)
+    call extend(l:command, ['guifg='.l:gui, 'ctermfg='.l:cterm])
+  endif
+  if strlen(l:bg)
+    let l:gui = s:colors.gui(l:bg)
+    let l:cterm = s:colors.cterm(l:bg)
+    call extend(l:command, ['guibg='.l:gui, 'ctermbg='.l:cterm])
+  endif
+  if strlen(l:decoration)
+    let l:gui = s:decorations.gui(l:decoration)
+    let l:cterm = s:decorations.cterm(l:decoration)
+    call extend(l:command, ['gui='.l:gui, 'cterm='.l:cterm])
+  endif
+
+  execute join(l:command, ' ')
+endfunction
 
 " Vim UI
-hi Cursor        guifg=#ffffff ctermfg=15 guibg=#0060c0 ctermbg=4 
-hi Cursorline    guifg=NONE ctermfg=NONE guibg=#c0c0c0 ctermbg=7 gui=NONE cterm=NONE 
-hi MatchParen    guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=underline cterm=underline 
-hi Pmenu         guifg=#ffffff ctermfg=15 guibg=#606060 ctermbg=8 
-hi PmenuThumb    guibg=#c0c0c0 ctermbg=7 
-hi PmenuSBar     guibg=#606060 ctermbg=8 
-hi PmenuSel      guifg=#ffffff ctermfg=15 guibg=#0060c0 ctermbg=4 
-hi ColorColumn   guibg=#c0c0c0 ctermbg=7 
-hi SpellBad      guifg=#c00000 ctermfg=1 guibg=NONE ctermbg=NONE gui=underline cterm=underline 
-hi SpellCap      guifg=#008000 ctermfg=2 guibg=NONE ctermbg=NONE gui=underline cterm=underline 
-hi SpellRare     guifg=#c06000 ctermfg=3 guibg=NONE ctermbg=NONE gui=underline cterm=underline 
-hi SpellLocal    guifg=#a000a0 ctermfg=5 guibg=NONE ctermbg=NONE gui=underline cterm=underline 
-hi NonText       guifg=#c0c0c0 ctermfg=7 
-hi LineNr        guifg=#606060 ctermfg=8 guibg=NONE ctermbg=NONE 
-hi CursorLineNr  guifg=#0060c0 ctermfg=4 guibg=NONE ctermbg=NONE 
-hi ModeMsg       guifg=#c06000 ctermfg=3 guibg=NONE ctermbg=NONE gui=bold cterm=bold 
-hi Visual        guifg=NONE ctermfg=NONE guibg=#c0c0c0 ctermbg=7 
-hi IncSearch     guifg=#ffffff ctermfg=15 guibg=#c06000 ctermbg=3 gui=NONE cterm=NONE 
-hi Search        guifg=#ffffff ctermfg=15 guibg=#c06000 ctermbg=3 
-hi StatusLine    guifg=#ffffff ctermfg=15 guibg=#0060c0 ctermbg=4 gui=bold cterm=bold 
-hi StatusLineNC  guifg=#ffffff ctermfg=15 guibg=#606060 ctermbg=8 gui=bold cterm=bold 
-hi VertSplit     guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE 
-hi TabLine       guifg=#ffffff ctermfg=15 guibg=#c0c0c0 ctermbg=7 gui=NONE cterm=NONE 
-hi TabLineSel    guifg=#ffffff ctermfg=15 guibg=#606060 ctermbg=8 
-hi TabLineFill   guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE 
-hi Folded        guifg=#606060 ctermfg=8 guibg=NONE ctermbg=NONE 
-hi Directory     guifg=#008080 ctermfg=6 
-hi Title         guifg=NONE ctermfg=NONE 
-hi ErrorMsg      guifg=#ffffff ctermfg=15 guibg=#c00000 ctermbg=1 
-hi WarningMsg    guifg=#ffffff ctermfg=15 guibg=#c06000 ctermbg=3 
-hi DiffAdd       guifg=#ffffff ctermfg=15 guibg=#008000 ctermbg=2 
-hi DiffChange    guifg=#ffffff ctermfg=15 guibg=#c06000 ctermbg=3 
-hi DiffDelete    guifg=#ffffff ctermfg=15 guibg=#c00000 ctermbg=1 
-hi DiffText      guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=bold cterm=bold 
-hi WildMenu      guifg=#ffffff ctermfg=15 guibg=#606060 ctermbg=8 gui=bold cterm=bold 
+call s:highlight('Cursor', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'BLUE'
+      \ })
+call s:highlight('CursorLine', {
+      \ 'fg': 'NONE',
+      \ 'bg': 'LIGHT_GRAY',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('MatchParen', {
+      \ 'fg': 'NONE',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'UNDERLINE'
+      \ })
+call s:highlight('Pmenu', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'DARK_GRAY'
+      \ })
+call s:highlight('PmenuThumb', {
+      \ 'bg': 'LIGHT_GRAY'
+      \ })
+call s:highlight('PmenuSBar', {
+      \ 'bg': 'DARK_GRAY'
+      \ })
+call s:highlight('PmenuSel', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'BLUE'
+      \ })
+call s:highlight('ColorColumn', {
+      \ 'bg': 'LIGHT_GRAY'
+      \ })
+call s:highlight('SpellBad', {
+      \ 'fg': 'RED',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'UNDERLINE'
+      \ })
+call s:highlight('SpellCap', {
+      \ 'fg': 'GREEN',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'UNDERLINE'
+      \ })
+call s:highlight('SpellRare', {
+      \ 'fg': 'YELLOW',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'UNDERLINE'
+      \ })
+call s:highlight('SpellLocal', {
+      \ 'fg': 'PURPLE',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'UNDERLINE'
+      \ })
+call s:highlight('NonText', {
+      \ 'fg': 'LIGHT_GRAY'
+      \ })
+call s:highlight('LineNr', {
+      \ 'fg': 'DARK_GRAY',
+      \ 'bg': 'NONE'
+      \ })
+call s:highlight('CursorLineNr', {
+      \ 'fg': 'BLUE',
+      \ 'bg': 'NONE'
+      \ })
+call s:highlight('ModeMsg', {
+      \ 'fg': 'YELLOW',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'BOLD'
+      \ })
+call s:highlight('Visual', {
+      \ 'fg': 'NONE',
+      \ 'bg': 'LIGHT_GRAY'
+      \ })
+call s:highlight('IncSearch', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'YELLOW',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('Search', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'YELLOW'
+      \ })
+call s:highlight('StatusLine', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'BLUE',
+      \ 'decoration': 'BOLD'
+      \ })
+call s:highlight('StatusLineNC', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'DARK_GRAY',
+      \ 'decoration': 'BOLD'
+      \ })
+call s:highlight('VertSplit', {
+      \ 'fg': 'NONE',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('TabLine', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'LIGHT_GRAY',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('TabLineSel', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'DARK_GRAY'
+      \ })
+call s:highlight('TabLineFill', {
+      \ 'fg': 'NONE',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('Folded', {
+      \ 'fg': 'DARK_GRAY',
+      \ 'bg': 'NONE'
+      \ })
+call s:highlight('Directory', {
+      \ 'fg': 'CYAN'
+      \ })
+call s:highlight('Title', {
+      \ 'fg': 'NONE'
+      \ })
+call s:highlight('ErrorMsg', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'RED'
+      \ })
+call s:highlight('WarningMsg', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'YELLOW'
+      \ })
+call s:highlight('DiffAdd', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'GREEN'
+      \ })
+call s:highlight('DiffChange', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'YELLOW'
+      \ })
+call s:highlight('DiffDelete', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'RED'
+      \ })
+call s:highlight('DiffText', {
+      \ 'fg': 'NONE',
+      \ 'bg': 'NONE',
+      \ 'decoration': 'BOLD'
+      \ })
+call s:highlight('WildMenu', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'DARK_GRAY',
+      \ 'decoration': 'BOLD'
+      \ })
 
 hi! link CursorColumn  CursorLine
 hi! link SignColumn    LineNr
@@ -52,21 +265,60 @@ hi! link Question      ModeMsg
 hi! link SpecialKey    NonText
 
 " Generic syntax
-hi Comment     guifg=#606060 ctermfg=8 
-hi Constant    guifg=#c06000 ctermfg=3 
-hi String      guifg=#c00000 ctermfg=1 
-hi Character   guifg=#0060c0 ctermfg=4 
-hi Number      guifg=#0060c0 ctermfg=4 
-hi Boolean     guifg=#a000a0 ctermfg=5 
-hi Float       guifg=#0060c0 ctermfg=4 
-hi Identifier  guifg=#0060c0 ctermfg=4 
-hi Statement   guifg=#a000a0 ctermfg=5 gui=NONE cterm=NONE 
-hi PreProc     guifg=#c06000 ctermfg=3 
-hi Type        guifg=#a000a0 ctermfg=5 gui=NONE cterm=NONE 
-hi Special     guifg=#c06000 ctermfg=3 
-hi Delimiter   guifg=NONE ctermfg=NONE 
-hi Underlined  guifg=#0060c0 ctermfg=4 gui=underline cterm=underline 
-hi Ignore      guifg=#c0c0c0 ctermfg=7 
-hi Error       guifg=#ffffff ctermfg=15 guibg=#c00000 ctermbg=1 
-hi Todo        guifg=#c06000 ctermfg=3 guibg=NONE ctermbg=NONE 
+call s:highlight('Comment', {
+      \ 'fg': 'DARK_GRAY'
+      \ })
+call s:highlight('Constant', {
+      \ 'fg': 'YELLOW'
+      \ })
+call s:highlight('String', {
+      \ 'fg': 'RED'
+      \ })
+call s:highlight('Character', {
+      \ 'fg': 'BLUE'
+      \ })
+call s:highlight('Number', {
+      \ 'fg': 'BLUE'
+      \ })
+call s:highlight('Boolean', {
+      \ 'fg': 'PURPLE'
+      \ })
+call s:highlight('Float', {
+      \ 'fg': 'BLUE'
+      \ })
+call s:highlight('Identifier', {
+      \ 'fg': 'BLUE'
+      \ })
+call s:highlight('Statement', {
+      \ 'fg': 'PURPLE',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('PreProc', {
+      \ 'fg': 'YELLOW'
+      \ })
+call s:highlight('Type', {
+      \ 'fg': 'PURPLE',
+      \ 'decoration': 'NONE'
+      \ })
+call s:highlight('Special', {
+      \ 'fg': 'YELLOW'
+      \ })
+call s:highlight('Delimiter', {
+      \ 'fg': 'NONE'
+      \ })
+call s:highlight('Underlined', {
+      \ 'fg': 'BLUE',
+      \ 'decoration': 'UNDERLINE'
+      \ })
+call s:highlight('Ignore', {
+      \ 'fg': 'LIGHT_GRAY'
+      \ })
+call s:highlight('Error', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'RED'
+      \ })
+call s:highlight('Todo', {
+      \ 'fg': 'YELLOW',
+      \ 'bg': 'NONE'
+      \ })
 
