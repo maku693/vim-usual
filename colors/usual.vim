@@ -8,6 +8,10 @@ endif
 let g:colors_name='usual'
 
 let s:colors = {
+      \   'BLACK': {
+      \     'cterm': '0',
+      \     'gui': '#000000'
+      \   },
       \   'DARK_GRAY': {
       \     'cterm': '8',
       \     'gui': '#606060'
@@ -322,3 +326,21 @@ call s:highlight('Todo', {
       \ 'bg': 'NONE'
       \ })
 
+let g:terminal_ansi_colors = [
+      \ s:colors.gui('BLACK'),
+      \ s:colors.gui('RED'),
+      \ s:colors.gui('GREEN'),
+      \ s:colors.gui('YELLOW'),
+      \ s:colors.gui('BLUE'),
+      \ s:colors.gui('PURPLE'),
+      \ s:colors.gui('CYAN'),
+      \ s:colors.gui('LIGHT_GRAY'),
+      \ s:colors.gui('DARK_GRAY'),
+      \ s:colors.gui('RED'),
+      \ s:colors.gui('GREEN'),
+      \ s:colors.gui('YELLOW'),
+      \ s:colors.gui('BLUE'),
+      \ s:colors.gui('PURPLE'),
+      \ s:colors.gui('CYAN'),
+      \ s:colors.gui('WHITE')
+      \ ]
