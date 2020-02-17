@@ -103,7 +103,7 @@ let s:colors = {
 
 function! s:define_colors_accessor(type) abort
   execute
-        \ 'function! s:color.'.a:type.'(name) abort'."\n".
+        \ 'function! s:colors.'.a:type.'(name) abort'."\n".
         \ '  return self["'. &background .'"][a:name]["'.a:type.'"]'."\n".
         \ 'endfunction'."\n"
 endfunction
@@ -125,14 +125,14 @@ let s:decorations = {
 
 function! s:define_decorations_accessor(type) abort
   execute
-        \ 'function! s:decoration.'.a:type.'(name) abort'."\n".
+        \ 'function! s:decorations.'.a:type.'(name) abort'."\n".
         \ '  return self[a:name]["'.a:type.'"]'."\n".
         \ 'endfunction'."\n"
 endfunction
 
-for l:type in ['cterm', 'gui']
-  call s:define_colors_accessor(l:type)
-  call s:define_decorations_accessor(l:type)
+for s:type in ['cterm', 'gui']
+  call s:define_colors_accessor(s:type)
+  call s:define_decorations_accessor(s:type)
 endfor
 
 function! s:highlight(group, options) abort
