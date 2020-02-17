@@ -251,6 +251,17 @@ call s:highlight('StatusLineNC', {
       \ 'bg': 'DARK_GRAY',
       \ 'decoration': 'BOLD'
       \ })
+call s:highlight('StatusLineTerm', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'GREEN',
+      \ 'bg': 'GREEN',
+      \ 'decoration': 'BOLD'
+      \ })
+call s:highlight('StatusLineTermNC', {
+      \ 'fg': 'WHITE',
+      \ 'bg': 'DARK_GRAY',
+      \ 'decoration': 'BOLD'
+      \ })
 call s:highlight('VertSplit', {
       \ 'fg': 'NONE',
       \ 'bg': 'NONE',
