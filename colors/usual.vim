@@ -167,7 +167,7 @@ call s:highlight('Cursor', {
       \ })
 call s:highlight('CursorLine', {
       \ 'fg': 'NONE',
-      \ 'bg': 'LIGHT_GRAY',
+      \ 'bg': &background == 'dark' ? 'DARK_GRAY' : 'LIGHT_GRAY',
       \ 'decoration': 'NONE'
       \ })
 call s:highlight('MatchParen', {
@@ -230,7 +230,7 @@ call s:highlight('ModeMsg', {
       \ })
 call s:highlight('Visual', {
       \ 'fg': 'NONE',
-      \ 'bg': 'LIGHT_GRAY'
+      \ 'bg': &background == 'dark' ? 'DARK_GRAY' : 'LIGHT_GRAY'
       \ })
 call s:highlight('IncSearch', {
       \ 'fg': 'WHITE',
@@ -320,7 +320,7 @@ hi! link SpecialKey    NonText
 
 " Generic syntax
 call s:highlight('Comment', {
-      \ 'fg': 'DARK_GRAY'
+      \ 'fg': &background == 'dark' ? 'LIGHT_GRAY' : 'DARK_GRAY'
       \ })
 call s:highlight('Constant', {
       \ 'fg': 'YELLOW'
