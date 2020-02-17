@@ -1,4 +1,3 @@
-set background=light
 hi clear
 
 if exists('syntax_on')
@@ -8,51 +7,106 @@ endif
 let g:colors_name='usual'
 
 let s:colors = {
-      \   'BLACK': {
-      \     'cterm': '0',
-      \     'gui': '#000000'
+      \   'dark': {
+      \     'BLACK': {
+      \       'cterm': '0',
+      \       'gui': '#000000'
+      \     },
+      \     'DARK_GRAY': {
+      \       'cterm': '8',
+      \       'gui': '#5f5f5f'
+      \     },
+      \     'LIGHT_GRAY': {
+      \       'cterm': '7',
+      \       'gui': '#bfbfbf'
+      \     },
+      \     'WHITE': {
+      \       'cterm': '15',
+      \       'gui': '#ffffff'
+      \     },
+      \     'RED': {
+      \       'cterm': '1',
+      \       'gui': '#ff3f3f'
+      \     },
+      \     'GREEN': {
+      \       'cterm': '2',
+      \       'gui': '#2fbf2f'
+      \     },
+      \     'YELLOW': {
+      \       'cterm': '3',
+      \       'gui': '#ff9f3f'
+      \     },
+      \     'BLUE': {
+      \       'cterm': '4',
+      \       'gui': '#3f9fff'
+      \     },
+      \     'PURPLE': {
+      \       'cterm': '5',
+      \       'gui': '#bf2fbf'
+      \     },
+      \     'CYAN': {
+      \       'cterm': '6',
+      \       'gui': '#2fbfbf'
+      \     },
+      \     'NONE': {
+      \       'cterm': 'NONE',
+      \       'gui': 'NONE'
+      \     }
       \   },
-      \   'DARK_GRAY': {
-      \     'cterm': '8',
-      \     'gui': '#606060'
-      \   },
-      \   'LIGHT_GRAY': {
-      \     'cterm': '7',
-      \     'gui': '#c0c0c0'
-      \   },
-      \   'WHITE': {
-      \     'cterm': '15',
-      \     'gui': '#ffffff'
-      \   },
-      \   'RED': {
-      \     'cterm': '1',
-      \     'gui': '#c00000'
-      \   },
-      \   'GREEN': {
-      \     'cterm': '2',
-      \     'gui': '#008000'
-      \   },
-      \   'YELLOW': {
-      \     'cterm': '3',
-      \     'gui': '#c06000'
-      \   },
-      \   'BLUE': {
-      \     'cterm': '4',
-      \     'gui': '#0060c0'
-      \   },
-      \   'PURPLE': {
-      \     'cterm': '5',
-      \     'gui': '#a000a0'
-      \   },
-      \   'CYAN': {
-      \     'cterm': '6',
-      \     'gui': '#008080'
-      \   },
-      \   'NONE': {
-      \     'cterm': 'NONE',
-      \     'gui': 'NONE'
+      \   'light': {
+      \     'BLACK': {
+      \       'cterm': '0',
+      \       'gui': '#000000'
+      \     },
+      \     'DARK_GRAY': {
+      \       'cterm': '8',
+      \       'gui': '#606060'
+      \     },
+      \     'LIGHT_GRAY': {
+      \       'cterm': '7',
+      \       'gui': '#c0c0c0'
+      \     },
+      \     'WHITE': {
+      \       'cterm': '15',
+      \       'gui': '#ffffff'
+      \     },
+      \     'RED': {
+      \       'cterm': '1',
+      \       'gui': '#c00000'
+      \     },
+      \     'GREEN': {
+      \       'cterm': '2',
+      \       'gui': '#008000'
+      \     },
+      \     'YELLOW': {
+      \       'cterm': '3',
+      \       'gui': '#c06000'
+      \     },
+      \     'BLUE': {
+      \       'cterm': '4',
+      \       'gui': '#0060c0'
+      \     },
+      \     'PURPLE': {
+      \       'cterm': '5',
+      \       'gui': '#a000a0'
+      \     },
+      \     'CYAN': {
+      \       'cterm': '6',
+      \       'gui': '#008080'
+      \     },
+      \     'NONE': {
+      \       'cterm': 'NONE',
+      \       'gui': 'NONE'
+      \     }
       \   }
       \ }
+
+function! s:define_colors_accessor(type) abort
+  execute
+        \ 'function! s:color.'.a:type.'(name) abort'."\n".
+        \ '  return self["'. &background .'"][a:name]["'.a:type.'"]'."\n".
+        \ 'endfunction'."\n"
+endfunction
 
 let s:decorations = {
       \   'BOLD': {
@@ -69,21 +123,17 @@ let s:decorations = {
       \   }
       \ }
 
-function! s:define_accessor(dict, type) abort
+function! s:define_decorations_accessor(type) abort
   execute
-        \ 'function! '.a:dict.'.'.a:type.'(name) abort'."\n".
+        \ 'function! s:decoration.'.a:type.'(name) abort'."\n".
         \ '  return self[a:name]["'.a:type.'"]'."\n".
         \ 'endfunction'."\n"
 endfunction
 
-function! s:define_accessors(dict) abort
-  for l:type in ['cterm', 'gui']
-    call s:define_accessor(a:dict, l:type)
-  endfor
-endfunction
-
-call s:define_accessors('s:colors')
-call s:define_accessors('s:decorations')
+for l:type in ['cterm', 'gui']
+  call s:define_colors_accessor(l:type)
+  call s:define_decorations_accessor(l:type)
+endfor
 
 function! s:highlight(group, options) abort
   let l:fg = get(a:options, 'fg', '')
