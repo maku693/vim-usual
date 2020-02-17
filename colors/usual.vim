@@ -254,7 +254,6 @@ call s:highlight('StatusLineNC', {
 call s:highlight('StatusLineTerm', {
       \ 'fg': 'WHITE',
       \ 'bg': 'GREEN',
-      \ 'bg': 'GREEN',
       \ 'decoration': 'BOLD'
       \ })
 call s:highlight('StatusLineTermNC', {
